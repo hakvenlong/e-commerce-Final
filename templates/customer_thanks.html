@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'includes/head.html' %}
+    <style>
+        .card {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2e8b57;
+            margin-bottom: 1.5rem;
+        }
+        .info {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: left;
+            font-size: 1rem;
+        }
+        .info p {
+            margin: 0.4rem 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            background: #2e8b57;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #276f47; }
+        .btn-secondary {
+            background: #666;
+        }
+        .btn-secondary:hover { background: #555; }
+    </style>
+</head>
+<body>
+
+    {% include 'includes/navbar.html' %}
+
+    <main class="container my-5">
+        <div class="card">
+            <h1>Thank You{% if name %}, {{ name }}{% endif %}!</h1>
+
+            {% if paid %}
+                <p>Your payment has been <strong>successfully received</strong>.</p>
+
+                <div class="info">
+                    <p><strong>Bill #:</strong> {{ bill_number }}</p>
+                    <p><strong>Amount:</strong> {{ "%.2f"|format(amount_khr) }} KHR</p>
+                    <p><strong>Delivery Address:</strong><br>{{ address }}</p>
+                </div>
+
+                {% if has_invoice %}
+                    <a href="{{ url_for('download_invoice') }}" class="btn">
+                        Download Invoice (PDF)
+                    </a>
+                {% endif %}
+
+                <p>We’ll deliver your order soon.</p>
+
+            {% else %}
+                <p>Your order has been placed <strong>(Cash on Delivery)</strong>.</p>
+            {% endif %}
+
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                Back to Shop
+            </a>
+        </div>
+    </main>
+
+    <footer class="footer bg-dark text-white">
+        {% include 'includes/footer.html' %}
+    </footer>
+</body>
+</html>

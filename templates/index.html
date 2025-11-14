@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'includes/head.html' %}
+
+<body>
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+
+    <main class="container-md">
+        <section id="slider" data-aos="fade-up">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="slider-carousel" class="carousel slide" data-bs-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-bs-target="#slider-carousel" data-bs-slide-to="0" class="active"></li>
+                                <li data-bs-target="#slider-carousel" data-bs-slide-to="1"></li>
+                                <li data-bs-target="#slider-carousel" data-bs-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="row">
+                                        <div class="col-sm-6 d-flex align-items-center" data-aos="fade-right">
+                                            <div>
+                                                <h1><span>You Got This</span></h1>
+                                                <h2>Impossible is Nothing</h2>
+                                                <p>It represented pushing boundaries and striving for the impossible in sports and life.</p>
+                                                <button type="button" class="btn btn-primary get mb-3" aria-label="Get it now">Get it now</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" data-aos="fade-left">
+                                            <img src="//images.ctfassets.net/q602vtcuu3w3/1czwM4H7so8sIlNyeE1QpE/153e8e86e63a81a7b6e04ddd253029ed/UO_25_HP_2UP_Desktop_US_4.jpg?w=2048&q=80&fm=webp" class="girl img-fluid" alt="Fashion Model 1" loading="lazy" />
+                                            <!-- <img src="//images.ctfassets.net/q602vtcuu3w3/1czwM4H7so8sIlNyeE1QpE/153e8e86e63a81a7b6e04ddd253029ed/UO_25_HP_2UP_Desktop_US_4.jpg?w=2048&q=80&fm=webp" class="pricing" alt="Pricing Badge" loading="lazy" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="row">
+                                        <div class="col-sm-6 d-flex align-items-center" data-aos="fade-right">
+                                            <div>
+                                                <h1><span>Just do it</span></h1>
+                                                <h2>Greatness is earned, never awarded</h2>
+                                                <p>The harder you push, the more you are pulled. Take the high road and go higher. Giving up is simply not an option</p>
+                                                <button type="button" class="btn btn-primary get mb-3" aria-label="Get it now">Get it now</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" data-aos="fade-left">
+                                            <img src="//images.ctfassets.net/q602vtcuu3w3/4D8jvaC9thxHtEyffpC0Au/548c00a90698404313f9484656c00a74/UO_25_HP_2UP_Desktop_US_1.jpg?w=2048&q=80&fm=webp" class="girl img-fluid" alt="Fashion Model 2" loading="lazy" />
+                                            <!-- <img src="https://hips.hearstapps.com/hmg-prod/images/lionel-messi-celebrates-after-their-sides-third-goal-by-news-photo-1686170172.jpg?crop=0.66653xw:1xh;center,top&resize=640:*" class="pricing" alt="Pricing Badge" loading="lazy" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="row">
+                                        <div class="col-sm-6 d-flex align-items-center" data-aos="fade-right">
+                                            <div>
+                                                <h1><span>O</span>ur Turn</h1>
+                                                <h2>It signifies a time for action and empowerment, encouraging individuals to make their mark on the world.</h2>
+                                                <button type="button" class="btn btn-primary get mb-3" aria-label="Get it now">Get it now</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" data-aos="fade-left">
+                                            <img src="https://images.ctfassets.net/q602vtcuu3w3/1hdsJJWi9Jf7vES0evyWpB/f3d9604958720b8d38827752f535cd58/UO_25_HP_2UP_Desktop_US_6.jpg?w=2048&q=80&fm=webp" class="girl img-fluid" alt="Fashion Model 3" loading="lazy" />
+                                            <!-- <img src="https://hips.hearstapps.com/hmg-prod/images/lionel-messi-celebrates-after-their-sides-third-goal-by-news-photo-1686170172.jpg?crop=0.66653xw:1xh;center,top&resize=640:*" class="pricing" alt="Pricing Badge" loading="lazy" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#slider-carousel" class="carousel-control-prev" data-bs-slide="prev" aria-label="Previous slide">
+                                <i class="fas fa-angle-left"></i>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a href="#slider-carousel" class="carousel-control-next" data-bs-slide="next" aria-label="Next slide">
+                                <i class="fas fa-angle-right"></i>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="todays-deals" data-aos="fade-up">
+            <h2>Today's For You!</h2>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 position-relative" data-aos="zoom-in"
+                         data-id="{{ product.id }}"
+                         data-name="{{ product.name }}"
+                         data-price="{{ product.price }}"
+                         data-image="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                         data-categories="{{ product.categories }}"
+                         data-brand="{{ product.brand }}">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                            <img src="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                                 class="card-img-top"
+                                 alt="{{ product.name }}"
+                                 loading="lazy">
+                        </a>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ product.name }}</h3>
+                            <p class="card-text">{{ product.brand }}</p>
+                            <p class="price">${{ "%.2f" % product.price }} ({{ product.price * 4060 | int }} KHR)</p>
+                        </div>
+                        <div class="card-actions">
+                            <button type="button" class="btn btn-primary btn-add-cart mb-3"
+                                    data-id="{{ product.id }}"
+                                    data-name="{{ product.name }}"
+                                    data-price="{{ product.price }}"
+                                    data-image="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                                    aria-label="Add to Cart">Add to Cart</button>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                               class="btn btn-primary mb-3"
+                               aria-label="View Details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer bg-dark text-white">
+        {% include 'includes/footer.html' %}
+    </footer>
+
+    <script>
+        // Custom Alert Function
+        function showCustomAlert(message, type = 'success') {
+            const existingAlerts = document.querySelectorAll('.custom-alert');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert alert alert-${type} alert-dismissible fade show`;
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = `${20 + (existingAlerts.length * 80)}px`;
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '1050';
+            alertDiv.style.minWidth = '200px';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                alertDiv.classList.add('fade');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
+
+        // Add to Cart
+        document.querySelectorAll('.btn-add-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = {
+                    id: this.dataset.id,
+                    name: this.dataset.name,
+                    price: parseFloat(this.dataset.price),
+                    image: this.dataset.image,
+                    quantity: 1
+                };
+                fetch('/add-to-cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        showCustomAlert(data.message || `${product.name} added to cart!`, 'success');
+                    } else {
+                        showCustomAlert(data.message || 'Error adding product to cart.', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    showCustomAlert(`Error adding product to cart: ${error.message}`, 'danger');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

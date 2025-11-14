@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'includes/head.html' %}
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+
+    <main class="container my-5">
+        <h2 class="mb-4" data-aos="fade-up">Shop</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="card h-100 position-relative" data-aos="zoom-in"
+                     data-id="{{ product.id }}"
+                     data-name="{{ product.name }}"
+                     data-price="{{ product.price }}"
+                     data-image="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                     data-categories="{{ product.categories }}"
+                     data-brand="{{ product.brand }}">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                        <img src="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                             class="card-img-top" alt="{{ product.name }}" loading="lazy">
+                    </a>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ product.name }}</h3>
+                        <p class="card-text">{{ product.brand }}</p>
+                        <p class="price">{{ product.price * 4060 | int }} KHR</p>
+                    </div>
+                    <div class="card-actions">
+                        <button type="button" class="btn btn-primary btn-add-cart mb-3"
+                                data-id="{{ product.id }}"
+                                data-name="{{ product.name }}"
+                                data-price="{{ product.price }}"
+                                data-image="{{ product.image if product.image.startswith('http') else url_for('static', filename=product.image) }}"
+                                aria-label="Add to Cart">
+                            <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                        </button>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}"
+                           class="btn btn-primary mb-3" aria-label="View Details">
+                            <i class="bi bi-eye me-1"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer class="footer bg-dark text-white">
+        {% include 'includes/footer.html' %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        function showCustomAlert(message, type = 'success') {
+            const existingAlerts = document.querySelectorAll('.custom-alert');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert alert alert-${type} alert-dismissible fade show`;
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = `${20 + (existingAlerts.length * 80)}px`;
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '1050';
+            alertDiv.style.minWidth = '200px';
+
+            // Add cart icon to success messages
+            const icon = type === 'success' ? '<i class="bi bi-cart-check me-2"></i>' : '<i class="bi bi-exclamation-triangle me-2"></i>';
+            alertDiv.innerHTML = `
+                ${icon}${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                alertDiv.classList.add('fade');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
+
+        document.querySelectorAll('.btn-add-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = {
+                    id: this.dataset.id,
+                    name: this.dataset.name,
+                    price: parseFloat(this.dataset.price),
+                    image: this.dataset.image,
+                    quantity: 1
+                };
+                fetch('/add-to-cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    showCustomAlert(data.message || `${product.name} added to cart!`, data.status === 'success' ? 'success' : 'danger');
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    showCustomAlert(`Error adding product to cart: ${error.message}`, 'danger');
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 800, once: true });
+        });
+    </script>
+</body>
+</html>

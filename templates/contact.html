@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'includes/head.html' %}
+</head>
+<body>
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+    
+    <main class="container mb-5">
+        <section class="bg-light py-3 py-md-5">
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-12">
+                        <h2 class="mb-4 display-5 text-center">Contact Us</h2>
+                        <p class="text-secondary mb-5 text-center">
+                            We'd love to hear from you! Fill out the form below to get in touch.
+                        </p>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d584.705292147838!2d104.89480649013795!3d11.567967498737799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095173761d4a53%3A0xcd09ff2f4d326e3f!2sSETEC%20Institute!5e0!3m2!1sen!2skh!4v1755776714215!5m2!1sen!2skh"
+                            width="100%" height="450" style="border:0;" allowfullscreen 
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="row justify-content-md-center mt-5">
+                    <!-- Contact Form -->
+                    <div class="col-12 col-md-6">
+                        <form id="contact-form" method="POST" action="/contact" novalidate>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       placeholder="Your Name" required>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       placeholder="Your Email" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject" 
+                                       placeholder="Subject" required>
+                                <div class="invalid-feedback">Please enter a subject.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" 
+                                          placeholder="Your Message" required></textarea>
+                                <div class="invalid-feedback">Please enter your message.</div>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary"
+                                        style="background-color: #FE980F; border-color: #FE980F;">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info & Social -->
+                    <div class="col-12 col-md-6">
+                        <div class="row mt-5">
+                            <div class="col-12 col-md-6 mb-3">
+                                <h5>Contact Information</h5>
+                                <p><i class="bi bi-geo-alt"></i> SMOS store, No. 86A, Street 110, Russian Federation Blvd (110), Phnom Penh</p>
+                                <p><i class="bi bi-telephone"></i> +855 123 456 789</p>
+                                <p><i class="bi bi-envelope"></i> info@smosstore.com</p>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <h5>Follow Us</h5>
+                                <a href="#" class="text-dark me-3" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                                <a href="#" class="text-dark me-3" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                                <a href="#" class="text-dark me-3" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-dark" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer bg-dark text-white">
+        {% include 'includes/footer.html' %}
+    </footer>
+</body>
+</html>
