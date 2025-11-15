@@ -18,7 +18,7 @@ Bottom line: For live stores accepting real payments via ABA Payway, do not depl
 The rest of the application (cart, checkout form, design, etc.) works perfectly worldwide.
 
 📁 Project Structure
-
+```
 project-root/
 ├── /static
 │   ├── /css          → Bootstrap 5 + custom styles
@@ -52,7 +52,7 @@ project-root/
 ├── vercel.json           → Vercel serverless deployment configuration
 ├── .env                  → Environment variables (secret keys, payment configs)
 └── README.md             → You are here
-
+```
 🚀 Key Features
 🛍️ Shopping Experience
 
