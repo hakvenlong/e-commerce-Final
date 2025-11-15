@@ -100,8 +100,8 @@ Storage: Session-based (can be extended to database)
 
 ▶️ Local Development Setup
 # 1. Clone the repository
-git clone https://github.com/hakvenlong/e-commerce-Final.git
-cd flask-ecommerce
+```git clone https://github.com/hakvenlong/e-commerce-Final.git```
+```cd flask-ecommerce```
 
 # 2. Create and activate virtual environment
 ```python -m venv venv```
