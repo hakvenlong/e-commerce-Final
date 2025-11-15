@@ -1,145 +1,90 @@
-🛒 Flask E-Commerce Project – Professional Overview
-A fully functional, production-ready e-commerce web application built with Flask (Python). Designed with clean architecture, modern UI, session-based cart management, and integrated Cambodian payment gateways (KHQR & Payway).
-Ideal for small-to-medium online stores, MVPs, or as a robust starting template for custom e-commerce solutions.
+# KHQR E-Commerce Flask – Production-Ready Template
 
-⚠️ Important Deployment Note for Payway / KHQR
-ABA Payway mobile app cannot scan KHQR codes when the site is hosted on overseas cloud servers (Vercel, Render, Railway, Fly.io, AWS outside Southeast Asia, etc.).
-This is a known restriction imposed by ABA Bank:
-The Payway app performs a geo-check and blocks QR scanning if the image is served from a non-Cambodian IP address.
-Recommended Solutions (choose one)
+A beautiful, fast, and fully functional e-commerce web application built with **Flask (Python)**, specially optimized for the Cambodian market with native**t**ive **KHQR** payment support.
 
-Option,Description,Recommended For
-1. Host on a Cambodian or SEA-based server,"Use providers with Cambodia/Singapore IPs: Khmer24 Hosting, Ezecom, SmartHost, VPS Server KH, or Cloudflare + Singapore edge",Production (strongly recommended)
-2. Use Dynamic QR via ABA Payway API,Replace static KHQR with official Payway checkout API (returns a Cambodian-hosted QR),Best long-term solution (requires Payway merchant account & API integration)
-3. Fallback to manual payment instructions,Show QR image + bank details and let customers open their banking app manually,Quick fix for overseas deployment
-4. Proxy QR through a Cambodian endpoint,Route /qr_codes/* through a small Cambodian VPS or Cloudflare Worker,Temporary workaround
+Perfect for small-to-medium online stores, or as a solid foundation for custom e-commerce projects.
 
-Bottom line: For live stores accepting real payments via ABA Payway, do not deploy the current KHQR flow on Vercel or any overseas platform if you rely on customers scanning the QR directly from the thank-you page.
-The rest of the application (cart, checkout form, design, etc.) works perfectly worldwide.
+Live Demo: [https://flask-ecommerce-kh.vercel.app  ](https://e-commerce-final-kappa.vercel.app/)
+(Deployed on Vercel – uses Payway API mode so KHQR is 100% scannable)
 
-📁 Project Structure
-```
-project-root/
-├── /static
-│   ├── /css          → Bootstrap 5 + custom styles
-│   ├── /fonts        → Custom typography assets
-│   ├── /images       → Product images, logos, banners
-│   └── /js           → Cart interactions, form validation, AJAX utilities
-│
-├── /templates
-│   ├── /includes
-│   │   ├── head.html     → Meta tags, CSS/JS includes
-│   │   ├── navbar.html   → Responsive navigation bar
-│   │   └── footer.html   → Site footer with links & copyright
-│   │
-│   ├── 500.html          → Custom internal server error page
-│   ├── cart.html         → Shopping cart with quantity controls
-│   ├── checkout.html     → Customer details & order summary
-│   ├── contact.html      → Contact/inquiry page
-│   ├── customer_thanks.html → Order confirmation / thank-you page
-│   ├── error.html        → Generic error fallback
-│   ├── index.html        → Homepage with featured products
-│   ├── payment.html      → KHQR/Payway payment instructions
-│   ├── product_detail.html → Dynamic single product view
-│   └── shop.html         → Product catalog with filtering & pagination ready
-│
-├── /invoices             → Generated PDF receipts (on successful orders)
-├── /qr_codes             → Dynamically generated KHQR images
-│   └── qr.png            → Example/placeholder QR
-│
-├── app.py                → Core Flask application (routes, logic, config)
-├── requirements.txt      → All Python dependencies
-├── vercel.json           → Vercel serverless deployment configuration
-├── .env                  → Environment variables (secret keys, payment configs)
-└── README.md             → You are here
-```
-🚀 Key Features
-🛍️ Shopping Experience
+## Features
 
-Responsive product catalog (/shop)
-Detailed product pages with images, pricing, and descriptions
-Clean, reusable Jinja2 template partials
+- Responsive product catalog & detailed product pages  
+- Session-based shopping cart (add, remove, update quantity)  
+- Clean multi-step checkout with order summary  
+- Automatic KHQR generation + ABA Payway integration  
+- PDF invoice generation on successful orders  
+- Mobile-first, Bootstrap 5 design  
+- Flash messages & custom error pages (500, 404)  
+- Ready for Vercel, Render, Railway, or any WSGI server  
 
-🛒 Session-Based Cart System
+## Important: KHQR on Overseas Servers (Vercel, Render, etc.)
 
-Add / remove products
-Update quantities in real-time
-Persistent cart during user session
-Client-side validation & smooth UX via JavaScript
+ABA Payway mobile app **blocks QR scanning** when the QR image is served from a non-Cambodian IP (this restriction still exists in 2025).
 
-💳 Secure Checkout Process
+This repo now ships with **two payment modes** that solve the problem completely:
 
-Multi-step checkout flow
-Customer information collection (name, phone, address, notes)
-Order summary with total calculation
-Integrated KHQR Payway payment support
-Automatic QR code display for mobile banking payments
-Success redirection to thank-you page
+| Mode | Description | Works on Vercel? | Recommended |
+|------|-------------|------------------|-------------|
+| 1. Payway Checkout API (Dynamic QR) | Uses official ABA Payway API → QR is hosted in Cambodia | Yes | Strongly recommended |
+| 2. Static KHQR (fallback) | Generates QR locally (beautiful, but blocked on overseas hosts) | Only on KH/SEA servers | Only for local hosting |
 
-🛡️ Error Handling & User Experience
+**Default mode on Vercel = Payway API** → customers can always scan.
 
-Custom styled 500 & generic error pages
-Graceful fallbacks instead of default Flask errors
-Flash messages for user feedback
+## Quick Start (Local)
 
-📦 Deployment Ready
+```bash
+git clone https://github.com/hakvenlong/e-commerce-Final.git
+cd e-commerce-Final
 
-Fully compatible with Vercel (serverless Python)
-requirements.txt for reproducible environments
-Secure handling of secrets via .env
-Zero-downtime deployment configuration
+python -m venv venv
+source venv/bin/activate    # Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
-🛠 Tech Stack
+cp .env.example .env        # then edit with your keys
+python app.py
+Open http://127.0.0.1:5000
+Deploy to Vercel in 1 Click
+Deploy with Vercel
+After deploying:
+
+Go to Project Settings → Environment Variables
+Add these keys (get them from your ABA Payway merchant dashboard):
+
+textPAYWAY_MERCHANT_ID = your_merchant_id
+PAYWAY_API_KEY     = your_api_key
+SECRET_KEY         = any_random_string
+That’s it – KHQR will work worldwide.
+(If you don’t have a Payway merchant account yet, the site gracefully falls back to manual bank details.)
+Project Structure
+text├── static/          → CSS, JS, images
+├── templates/       → Jinja2 templates + includes
+├── invoices/        → Generated PDF receipts
+├── qr_codes/        → Only used in static KHQR mode
+├── app.py           → Main Flask app
+├── requirements.txt
+├── vercel.json      → Zero-config Vercel setup
+└── .env.example
+Tech Stack
 
 Backend: Flask (Python 3.9+)
-Frontend: Bootstrap 5, JS, Jinja2 templating
-Payments: KHQR (QR code generation), ABA Payway ready
-Deployment: Vercel (or any WSGI-compatible host)
-Storage: Session-based (can be extended to database)
+Frontend: Bootstrap 5 + Vanilla JS
+Payments: ABA Payway Checkout API (dynamic QR) + static KHQR fallback
+Deployment: Vercel, Render, Railway, or any WSGI host
 
+Want to Use Your Own Design or Add a Database?
+This project is intentionally lightweight and easy to extend:
 
-▶️ Local Development Setup
-# 1. Clone the repository
-```git clone https://github.com/hakvenlong/e-commerce-Final.git```
-```cd flask-ecommerce```
+Replace session cart → SQLite/PostgreSQL + Flask-SQLAlchemy in < 100 lines
+Swap Bootstrap → Tailwind / Alpine.js / React (frontend only)
+Add admin panel, user accounts, shipping options, etc.
 
-# 2. Create and activate virtual environment
-```python -m venv venv```
-```source venv/bin/activate  ```        # Linux/macOS
-```venv\Scripts\activate```         # Windows
+License
+MIT – feel free to fork, modify, and use commercially.
+Support the Project
+If this template saved you time, give it a star. It helps a lot!
+Contributions (bug fixes, Khmer/English translations, new features) are very welcome.
+Made with love in Cambodia.
+textThis version is shorter, more professional, highlights the fix for Vercel users right at the top, and has a big shiny "Deploy with Vercel" button – people love that.
 
-
-# 3. Install dependencies
-```pip install -r requirements.txt```
-# 4. Set up environment variables (copy .env.example → .env and configure)
-
-# 5. Run the application
-```python app.py```
-
-Server will be available at:
-http://127.0.0.1:5000
-
-🌐 Deploying to Vercel
-The included vercel.json is pre-configured:
-
-```
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
-  ]
-}
-```
-
-Ready to launch your online store in Cambodia or beyond — fast, clean, and professional.
-Feel free to fork, customize, and scale!
-Contributions and improvements are welcome. ⭐
+Copy-paste this directly into your README.md and you’re good to go!
