@@ -104,17 +104,17 @@ git clone https://github.com/hakvenlong/e-commerce-Final.git
 cd flask-ecommerce
 
 # 2. Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate          # Linux/macOS
-venv\Scripts\activate             # Windows
+```python -m venv venv```
+```source venv/bin/activate  ```        # Linux/macOS
+```venv\Scripts\activate```         # Windows
+
 
 # 3. Install dependencies
-pip install -r requirements.txt
-
+```pip install -r requirements.txt```
 # 4. Set up environment variables (copy .env.example → .env and configure)
 
 # 5. Run the application
-python app.py
+```python app.py```
 
 Server will be available at:
 http://127.0.0.1:5000
@@ -122,7 +122,7 @@ http://127.0.0.1:5000
 🌐 Deploying to Vercel
 The included vercel.json is pre-configured:
 
-
+```
 {
   "version": 2,
   "builds": [
@@ -138,17 +138,7 @@ The included vercel.json is pre-configured:
     }
   ]
 }
-
-Simply connect your repository to Vercel and deploy — no additional configuration needed.
-🔜 Future Enhancements (Suggested)
-
-Admin dashboard (product/order management)
-Database integration (SQLite → PostgreSQL)
-User authentication & order history
-Email/SMS order notifications
-Inventory management
-Multi-language support (Khmer/English)
-
+```
 
 Ready to launch your online store in Cambodia or beyond — fast, clean, and professional.
 Feel free to fork, customize, and scale!
