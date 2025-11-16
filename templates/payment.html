@@ -1,103 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Scan to Pay – KHQR</title>
-        {% include 'includes/head.html' %}
-        <style>
-        .ticket{width:360px;background:#fff;border:2px solid #222;border-radius:6px;
-                box-shadow:0 6px 18px rgba(0,0,0,.12);overflow:hidden;margin:auto;}
-        .head{background:#d72323;color:#fff;padding:22px 16px;text-align:center;position:relative;}
-        .logo{font-weight:700;letter-spacing:2px;font-size:26px;line-height:1;}
-        .head::after{content:'';position:absolute;right:-26px;top:0;width:0;height:0;
-                    border-left:48px solid #fff;border-top:48px solid transparent;
-                    transform:translateY(-6px) rotate(15deg);}
-        .content{padding:18px 22px 8px 22px;}
-        .company{color:#666;font-size:20px;margin-bottom:6px;}
-        .amount-row{display:flex;align-items:baseline;gap:10px;}
-        .amount{font-size:34px;font-weight:700;}
-        .currency{color:#666;font-size:20px;}
-        .divider{margin:18px 12px;border-top:2px dashed #cfcfcf;}
-        .qr-wrap{padding:12px 18px 26px;display:flex;justify-content:center;}
-        .qr{width:300px;height:300px;border:6px solid #fff;box-shadow:0 1px 0 rgba(0,0,0,.04);}
-        .timer{font-size:20px;color:#333;text-align:center;}
-        .expired{color:red;}
-        .success{display:none;text-align:center;margin-top:20px;padding:20px;}
-        .success h2{color:#2e8b57;margin:0;font-size:28px;}
-        .success p{margin:8px 0 0;font-size:18px;}
-        .success .small{color:#666;font-size:14px;}
-    </style>
-    </head>
-    <body>
-        <header>
-            {% include 'includes/navbar.html' %}
-        </header>
-        <center class="mb-5">
-            <div class="ticket" id="ticket">
-                <div class="head"><div class="logo">KHQR</div></div>
-                <div class="content">
-                    <div class="company">{{ merchant_name }}</div>
-                    <div class="amount-row">
-                        <div class="amount">{{ price }}</div>
-                        <div class="currency">{{ currency }}</div>
-                    </div>
-                    <br>
-                    <div class="timer" id="countdown">05:00</div>
-                </div>
-                <div class="divider"></div>
-                <div class="qr-wrap">
-                    <img id="qr" src="{{ url_for('static', filename=qr) }}"
-                        alt="QR" class="qr">
-                </div>
-            </div>
-
-            <div class="success" id="success">
-                <h2>Paid Successfully!</h2>
-                <p>Thank you for your payment.</p>
-                <p class="small">Redirecting…</p>
-            </div>
-
-            <input type="hidden" id="md5" value="{{ md5 }}">
-        </center>
-        <footer class="footer bg-dark text-white">
-            {% include 'includes/footer.html' %}
-        </footer>
-
-        <script
-            src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-    const md5 = document.getElementById('md5').value;
-    let poll, timer;
-
-    poll = setInterval(() => {
-        axios.post('/check_payment_status', { md5 })
-            .then(r => {
-                console.log('Poll →', r.data);
-                if (r.data.paid) {
-                    clearInterval(poll);
-                    clearInterval(timer);
-                    document.getElementById('ticket').style.display = 'none';
-                    document.getElementById('success').style.display = 'block';
-                    setTimeout(() => window.location.replace("{{ url_for('customer_thanks') }}"), 1500);
-                }
-            })
-            .catch(() => {});
-    }, 3000);
-
-    let secs = 300;
-    const el = document.getElementById('countdown');
-    timer = setInterval(() => {
-        const m = String(Math.floor(secs/60)).padStart(2,'0');
-        const s = String(secs%60).padStart(2,'0');
-        el.textContent = `${m}:${s}`;
-        if (--secs < 0) {
-            clearInterval(timer);
-            clearInterval(poll);
-            el.textContent = 'Expired';
-            el.classList.add('expired');
-            document.getElementById('qr').style.display = 'none';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scan to Pay – KHQR</title>
+    {% include 'includes/head.html' %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 2rem 0;
         }
-    }, 1000);
-</script>
-    </body>
+        .ticket {
+            width: 380px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin: 2rem auto;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .head {
+            background: linear-gradient(135deg, #d72323, #ff4444);
+            color: #fff;
+            padding: 2.5rem 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .head::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+        .logo {
+            font-weight: 900;
+            letter-spacing: 4px;
+            font-size: 2.8rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .content {
+            padding: 1.8rem 2rem 1rem;
+            text-align: center;
+        }
+        .company {
+            color: #333;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .amount-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 12px;
+            margin: 1rem 0;
+        }
+        .amount {
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: #d72323;
+            text-shadow: 0 4px 15px rgba(215,35,35,0.3);
+        }
+        .currency {
+            font-size: 1.8rem;
+            color: #666;
+            font-weight: 600;
+        }
+        .divider {
+            margin: 1.5rem 1rem;
+            border-top: 3px dashed #ddd;
+        }
+        .qr-wrap {
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .qr {
+            width: 300px;
+            height: 300px;
+            border-radius: 16px;
+            border: 10px solid #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin: 1rem 0;
+        }
+        .expired { color: #e74c3c !important; }
+        .success {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+            color: white;
+        }
+        .success h2 {
+            font-size: 3.5rem;
+            margin: 0 0 1rem;
+            color: #2ecc71;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .success p {
+            font-size: 1.4rem;
+            margin: 0.8rem 0;
+        }
+        .success .bi {
+            font-size: 6rem;
+            color: #2ecc71;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+        .instructions {
+            background: rgba(255,255,255,0.15);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 2rem;
+            color: white;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'includes/navbar.html' %}
+
+    <div class="container my-5">
+        <div class="text-center text-white mb-4">
+            <h1 class="display-5 fw-bold">Scan & Pay with Bakong</h1>
+            <p class="lead">Open your banking app and scan the QR code below</p>
+        </div>
+
+        <div class="ticket" id="ticket">
+            <div class="head">
+                <div class="logo">KHQR</div>
+            </div>
+            <div class="content">
+                <div class="company">{{ merchant_name }}</div>
+                <div class="amount-row">
+                    <div class="amount">{{ "%.0f"|format(price) }}</div>
+                    <div class="currency">KHR</div>
+                </div>
+                <div class="timer" id="countdown">05:00</div>
+            </div>
+            <div class="divider"></div>
+            <div class="qr-wrap">
+                <img id="qr" src="{{ qr }}" alt="KHQR Code" class="qr">
+            </div>
+            <div class="instructions">
+                <strong>Supported Apps:</strong> ACLEDA • Wing • ABA • Pi Pay • Bakong
+            </div>
+        </div>
+
+        <div class="success" id="success">
+            <i class="bi bi-check-circle-fill"></i>
+            <h2>Payment Successful!</h2>
+            <p>Thank you for your purchase!</p>
+            <p>Redirecting to your order...</p>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-5 mt-5">
+        {% include 'includes/footer.html' %}
+    </footer>
+
+    <!-- Hidden MD5 -->
+    <input type="hidden" id="md5" value="{{ md5 }}">
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const md5 = document.getElementById('md5').value;
+        let poll, timer;
+
+        // Payment polling
+        poll = setInterval(() => {
+            axios.post('/check_payment_status', { md5 })
+                .then(r => {
+                    if (r.data.paid) {
+                        clearInterval(poll);
+                        clearInterval(timer);
+                        document.getElementById('ticket').style.display = 'none';
+                        document.getElementById('success').style.display = 'block';
+
+                        // CELEBRATION CONFETTI
+                        confetti({
+                            particleCount: 200,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+
+                        setTimeout(() => {
+                            window.location.href = "{{ url_for('customer_thanks') }}";
+                        }, 3000);
+                    }
+                })
+                .catch(() => {});
+        }, 3000);
+
+        // Countdown timer (5 minutes)
+        let secs = 300;
+        const el = document.getElementById('countdown');
+        timer = setInterval(() => {
+            const m = String(Math.floor(secs / 60)).padStart(2, '0');
+            const s = String(secs % 60).padStart(2, '0');
+            el.textContent = `${m}:${s}`;
+            if (--secs < 0) {
+                clearInterval(timer);
+                clearInterval(poll);
+                el.textContent = 'EXPIRED';
+                el.classList.add('expired');
+                document.getElementById('qr').style.opacity = '0.3';
+            }
+        }, 1000);
+    </script>
+</body>
 </html>

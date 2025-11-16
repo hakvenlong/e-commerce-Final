@@ -1,65 +1,77 @@
 <nav class="navbar navbar-expand-lg navbar-light sticky-top bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url_for('index') }}">
-            <img src="https://cdn.prod.website-files.com/657639ebfb91510f45654149/67b4c290ba7ef26519b35840_symbol.webp" alt="Logo" class="img-fluid" style="height: 50px;">
+            <img src="https://cdn.prod.website-files.com/657639ebfb91510f45654149/67b4c290ba7ef26519b35840_symbol.webp" 
+                 alt="Logo" class="img-fluid" style="height: 50px;">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == url_for('index') %}active{% endif %}" href="{{ url_for('index') }}" aria-current="page">Home</a>
+                    <a class="nav-link {% if request.path == url_for('index') %}active{% endif %}" 
+                       href="{{ url_for('index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == url_for('shop') %}active{% endif %}" href="{{ url_for('shop') }}">Shop</a>
+                    <a class="nav-link {% if request.path == url_for('shop') %}active{% endif %}" 
+                       href="{{ url_for('shop') }}">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == url_for('contact') %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a>
+                    <a class="nav-link {% if request.path == url_for('contact') %}active{% endif %}" 
+                       href="{{ url_for('contact') }}">Contact</a>
                 </li>
             </ul>
-            <form class="d-flex search-bar">
+
+            <!-- Search Bar (optional) -->
+            <form class="d-flex search-bar me-3">
                 <input class="form-control me-2" type="search" placeholder="Search products..." aria-label="Search">
-                <button class="btn btn-primary" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
+                <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
+
+            <!-- Cart Icon with Live Count -->
+            <div class="d-flex align-items-center">
+                <a href="{{ url_for('cart') }}" class="btn btn-outline-dark position-relative me-3">
+                    <i class="bi bi-cart"></i> Cart
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
+                </a>
+                <a href="{{ url_for('checkout') }}" class="btn btn-primary">
+                    <i class="bi bi-bag-check"></i> Checkout
+                </a>
+            </div>
         </div>
     </div>
 </nav>
-<nav class="navbar navbar-expand mb-4 bg-light">
-    <div class="container">
-        <ul class="navbar-nav ms-auto right-nav">
-            <li class="nav-item">
-                <a class="nav-link {% if request.path == url_for('cart') %}active{% endif %}" href="{{ url_for('cart') }}"><i class="bi bi-cart"></i> Cart <span id="cart-count" class="badge bg-primary">0</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.path == url_for('checkout') %}active{% endif %}" href="{{ url_for('checkout') }}"><i class="bi bi-bag-check"></i> Checkout</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+
+<!-- Axios + Live Cart Update Script -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     function updateCartCount() {
         axios.get('/get-cart')
-            .then(response => {
-                const data = response.data;
-                if (data.status === 'success') {
-                    const cart = data.cart || [];
-                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                    const cartCountElement = document.getElementById('cart-count');
-                    if (cartCountElement) {
-                        cartCountElement.textContent = totalItems;
-                    }
+            .then(res => {
+                const totalItems = res.data.total_items || 0;
+                const badge = document.getElementById('cart-count');
+                if (badge) {
+                    badge.textContent = totalItems;
+                    badge.style.display = totalItems > 0 ? 'inline' : 'none';
                 }
             })
-            .catch(error => {
-                console.error('Error updating cart count:', error);
-            });
+            .catch(err => console.error('Cart count error:', err));
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        updateCartCount();
-        // Update cart count every 5 seconds to reflect changes
-        setInterval(updateCartCount, 5000);
+    // Update on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+
+    // Update every 5 seconds (in case someone adds from another tab)
+    setInterval(updateCartCount, 5000);
+
+    // Optional: Update immediately when user clicks "Add to Cart" (if you have such buttons)
+    document.body.addEventListener('click', function(e) {
+        if (e.target.matches('[data-add-to-cart]') || e.target.closest('[data-add-to-cart]')) {
+            setTimeout(updateCartCount, 800); // small delay to let server update session
+        }
     });
 </script>
