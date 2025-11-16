@@ -4,6 +4,7 @@ import logging
 import re
 import qrcode
 import requests
+from mangum import Mangum  # Serverless adapter
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, session, url_for, send_file
 from datetime import datetime
