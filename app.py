@@ -586,17 +586,14 @@ def remove_from_cart():
     session.modified = True
     return jsonify({'status': 'success'})
 
-# ====================== FINAL RUN BLOCK — WORKS EVERYWHERE ======================
+# ====================== FINAL VERCEL-READY RUN BLOCK ======================
 handler = Mangum(app, lifespan="off")
 
-# For Vercel / Render / Railway / AWS Lambda
+# This is what Vercel calls
 def handler(event, context=None):
     return handler(event, context)
 
-# LOCAL DEVELOPMENT — WORKS 100% WITH "python app.py"
+# LOCAL DEVELOPMENT ONLY — NEVER RUNS ON VERCEL
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
-
-# This line allows "flask run" to work too (optional but safe)
-application = app
+    # This only runs when you do "python app.py" locally
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
