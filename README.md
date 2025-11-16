@@ -22,7 +22,7 @@ Live Demo: [https://flask-ecommerce-kh.vercel.app  ](https://e-commerce-final-ka
 
 ABA Payway mobile app **blocks QR scanning** when the QR image is served from a non-Cambodian IP (this restriction still exists in 2025).
 📁 Project Structure
-
+```
 textproject-root/
 ├── /static
 │ ├── /css → Bootstrap 5 + custom styles
@@ -56,7 +56,7 @@ textproject-root/
 ├── vercel.json → Vercel serverless deployment configuration
 ├── .env → Environment variables (secret keys, payment configs)
 └── README.md → You are here
-
+```
 🚀 Key Features
 🛍️ Shopping Experience
 Responsive product catalog (/shop)
