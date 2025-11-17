@@ -4,9 +4,6 @@ A beautiful, fast, and fully functional e-commerce web application built with **
 
 Perfect for small-to-medium online stores, or as a solid foundation for custom e-commerce projects.
 
-Live Demo: [https://flask-ecommerce-kh.vercel.app  ](https://e-commerce-final-kappa.vercel.app/)
-(Deployed on Vercel – uses Payway API mode so KHQR is 100% scannable)
-
 ## Features
 
 - Responsive product catalog & detailed product pages  
@@ -16,7 +13,6 @@ Live Demo: [https://flask-ecommerce-kh.vercel.app  ](https://e-commerce-final-ka
 - PDF invoice generation on successful orders  
 - Mobile-first, Bootstrap 5 design  
 - Flash messages & custom error pages (500, 404)  
-- Ready for Vercel, Render, Railway, or any WSGI server  
 
 ## Important: KHQR on Overseas Servers (Vercel, Render, etc.)
 
@@ -109,23 +105,6 @@ git```cd flask-ecommerce```
 Server will be available at:
 http://127.0.0.1:5000
 
-🌐 Deploying to Vercel
-The included vercel.json is pre-configured:
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
-  ]
-}
 textReady to launch your online store in Cambodia or beyond — fast, clean, and professional.
 Feel free to fork, customize, and scale!
 Contributions and improvements are welcome. ⭐
